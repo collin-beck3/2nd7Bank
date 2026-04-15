@@ -110,5 +110,4 @@ class MicroBank {
         return list;
     }
 }
-
-MicroBank.main(null); 
+//MicroBank.main(null); 
