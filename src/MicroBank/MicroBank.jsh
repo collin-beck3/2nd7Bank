@@ -2,10 +2,18 @@
 
 // read the input data from the file
 // each line looks like: 1/10/2026, deposit, 100.00
+// open file
+// read file line by line
+// split line into date, type, amount
+// if type is deposit, add amount to balance
+// if type is withdrawal, subtract amount from balance
+// once you run out of transactions, print final balance
 
+//import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 class MicroBank {
     // input file is "input.data"
@@ -27,7 +35,8 @@ class MicroBank {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { 
+        System.out.println( "Welcome to MicroBank!");
         MicroBank mb = new MicroBank();
         ArrayList<Transaction> transactions = mb.readData("input.data");
         for (Transaction t : transactions) {
@@ -38,6 +47,49 @@ class MicroBank {
             }
         }
         System.out.println(String.format("Final Balance: $%.2f", mb.balance));
+
+        Scanner scanner = new Scanner(System.in); 
+        boolean keepGoing = true; 
+        while (keepGoing) { 
+            System.out.println( "\nWhat would you like to do?"); 
+            System.out.println("1. Make a deposit");
+            System.out.println("2. Make a withdrawal");
+            System.out.println("3. Check balance");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+
+            String choice = scanner.nextLine();
+
+            switch (choice) { 
+                case "1":
+                    System.out.print("Enter deposit amount: ");
+                    double depositAmount = Double.parseDouble(scanner.nextLine());
+                    mb.balance += depositAmount;
+                    System.out.println(String.format("Deposited $%.2f", depositAmount));
+                    break;
+                case "2":
+                    System.out.print("Enter withdrawal amount: ");
+                    double withdrawalAmount = Double.parseDouble(scanner.nextLine());
+                    if (withdrawalAmount > mb.balance) {
+                        System.out.println("Insufficient funds");
+                    } else {
+                        mb.balance -= withdrawalAmount;
+                        System.out.println(String.format("Withdrew $%.2f", withdrawalAmount));
+                    }
+                    break;
+                case "3":
+                    System.out.println(String.format("Current Balance: $%.2f", mb.balance));
+                    break;
+                case "4":
+                    keepGoing = false;
+                    System.out.println("Thank you for Banking with Us! Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice, please try again.");
+            }
+        }
+        scanner.close();
+
     }
 
     ArrayList<Transaction> readData(String filename) {
@@ -59,4 +111,4 @@ class MicroBank {
     }
 }
 
-MicroBank.main(null);
+MicroBank.main(null); 
