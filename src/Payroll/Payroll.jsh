@@ -72,10 +72,41 @@ public class Payroll {
 
 // Start with the reading of data into a list
 ArrayList<Timecard> input_data = Payroll.readData("input.data");
-
+System.out.println("Name, Gross Pay, Taxes, Net Pay");
 String outp;
 // print out the data in the list. See `toString()` method above.
 for (Timecard t : input_data) {
     outp = t.payrollString();
     System.out.println(outp);
+
 }
+public class ReadData {
+    public static ArrayList<Timecard> readData(String fileName) {
+        try {
+            File file = new File(fileName);
+            Scanner scanner = new Scanner(file);
+            ArrayList<Timecard> data = new ArrayList<>();
+
+            // Skip header line
+            if (scanner.hasNextLine()) {
+                scanner.nextLine();
+            }
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split(",");
+                String name = parts[0].trim();
+                double hoursWorked = Double.parseDouble(parts[1].trim());
+                double hourlyRate = Double.parseDouble(parts[2].trim());
+                data.add(new Timecard(name, hoursWorked, hourlyRate));
+            }
+            scanner.close();
+            return data;
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            return null;
+        }
+    }
+}
+
+ArrayList<Timecard> input_data = ReadData.readData("input.data");
