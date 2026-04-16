@@ -8,6 +8,7 @@ class Timecard {
     String Name;
     double HoursWorked;
     double HourlyRate;
+    double TotalPayroll; 
 
     // timecard constructor (filling out the card) 
     public Timecard(String name, double hoursWorked, double hourlyRate) {
@@ -23,6 +24,7 @@ class Timecard {
         double gross_pay = this.HourlyRate * this.HoursWorked;    //total earned
         double taxes = gross_pay * tax_rate;     //taxes taken out
         double net_pay = gross_pay - taxes;     //take home pay
+        
         // produce the output string
         return String.format("%s, %.2f, %.2f, %.2f", this.Name, gross_pay, taxes, net_pay);
         //return "";
@@ -73,15 +75,21 @@ public class Payroll {
 }
 
 // RUN THE PROGRAM Start with the reading of data into a list
-ArrayList<Timecard> input_data = Payroll.readData("input.data");
+ArrayList<Timecard> input_data = Payroll.readData("halfmilemployees.csv");
 System.out.println("Name, Gross Pay, Taxes, Net Pay");
 String outp;
+double totalNetPay = 0.0;
 // print out the data in the list. See `toString()` method above.
 for (Timecard t : input_data) {
     outp = t.payrollString();
     System.out.println(outp);
-
+    // parse net pay from the generated payroll string
+    String[] parts = outp.split(",\s*");
+    totalNetPay += Double.parseDouble(parts[3]);
 }
+
+System.out.println("------------------------------------------------");
+System.out.println("Total Net Pay for all employees: " + String.format("%.2f", totalNetPay));
 
 // The flow of the program is as follows:
 // input.data file
